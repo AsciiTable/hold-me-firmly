@@ -4,12 +4,20 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public enum EnergyExpenditureMode { 
+        MultipliedAll,
+        DividedAll,
+        MultipliedSelected,
+        DividedSelected
+    };
+
     private const float CIRCLE_DEGREES = 360.0f;
     [SerializeField] private float movementSpeed = 10.0f;
     [SerializeField] private float tiltSpeed = 5.0f;
     [SerializeField] private float maxTilt = 30.0f;
     [SerializeField] private float energyExpenditureSpeed = 2.0f;
     [SerializeField] private float totalEnergy = 100.0f;
+    private List<Catchable> listOfCaughtShapes = new List<Catchable>();
     private float currentEnergy = 0.0f;
 
     // Start is called before the first frame update
@@ -31,10 +39,20 @@ public class Player : MonoBehaviour
     }
 
     private void MovePlayer() {
-        if(Input.GetAxis("Horizontal") > 0)
+        if (Input.GetAxis("Horizontal") > 0){
             gameObject.transform.position += new Vector3(movementSpeed * Time.deltaTime, 0.0f, 0.0f);
-        else
+            for (int i = 0; i < listOfCaughtShapes.Count; i++){
+                listOfCaughtShapes[i].MoveWithPlatform(movementSpeed * Time.deltaTime);
+            }
+        }
+
+        else {
             gameObject.transform.position += new Vector3(-1.0f * movementSpeed * Time.deltaTime, 0.0f, 0.0f);
+            for (int i = 0; i < listOfCaughtShapes.Count; i++){
+                listOfCaughtShapes[i].MoveWithPlatform(-1.0f * movementSpeed * Time.deltaTime);
+            }
+        }
+           
     }
 
     // would want strap underneath plate to prevent it from falling off from hand
@@ -55,6 +73,14 @@ public class Player : MonoBehaviour
                     gameObject.transform.localEulerAngles = new Vector3(0.0f, 0.0f, CIRCLE_DEGREES - maxTilt);
                 }
             }
+        }
+    }
+
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.GetComponent<Catchable>() != null) {
+            listOfCaughtShapes.Add(collision.gameObject.GetComponent<Catchable>());
         }
     }
 }
