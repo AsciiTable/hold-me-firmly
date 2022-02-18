@@ -21,10 +21,13 @@ public class Player : MonoBehaviour
 
     // Update is called once per frame
     void Update(){
-        if(Input.GetButton("Horizontal"))
+        if(Input.GetButton("Horizontal"))       // (a, d) or (<-, ->)
             MovePlayer();
-        if (Input.GetButton("Tilt"))
+        if (Input.GetButton("Tilt"))            // (mouse 0, mouse 2) or (q, e)
             TiltPlayer();
+        if (Input.GetButton("SpendEnergy")) {   // spacebar or w
+            
+        }
     }
 
     private void MovePlayer() {
