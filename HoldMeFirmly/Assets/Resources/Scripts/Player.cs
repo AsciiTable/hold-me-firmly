@@ -12,13 +12,19 @@ public class Player : MonoBehaviour
     };
 
     private const float CIRCLE_DEGREES = 360.0f;
+    [SerializeField] private EnergyExpenditureMode mode = EnergyExpenditureMode.MultipliedAll;
     [SerializeField] private float movementSpeed = 10.0f;
     [SerializeField] private float tiltSpeed = 5.0f;
     [SerializeField] private float maxTilt = 30.0f;
     [SerializeField] private float energyExpenditureSpeed = 2.0f;
     [SerializeField] private float totalEnergy = 100.0f;
-    private List<Catchable> listOfCaughtShapes = new List<Catchable>();
+    public static List<Catchable> listOfCaughtShapes = new List<Catchable>();
     private float currentEnergy = 0.0f;
+
+    // Passive Energy Expenditure
+    [SerializeField] private float passiveEnergyTickSeconds = 5.0f;
+    [SerializeField] private float passiveEnergyTickAmount = 1.0f;
+    private float passiveEnergyCooldown = 0.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -34,7 +40,10 @@ public class Player : MonoBehaviour
         if (Input.GetButton("Tilt"))            // (mouse 0, mouse 2) or (q, e)
             TiltPlayer();
         if (Input.GetButton("SpendEnergy")) {   // spacebar or w
-            
+            ActivelySpendEnergy();
+        }
+        else {
+            PassivelySpendEnergy();
         }
     }
 
@@ -76,6 +85,18 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void ActivelySpendEnergy() {
+        passiveEnergyCooldown = 0.0f;
+        //switch()
+    }
+
+    private void PassivelySpendEnergy() {
+        passiveEnergyCooldown += Time.deltaTime;
+        if (passiveEnergyCooldown >= passiveEnergyTickSeconds) {
+            currentEnergy -= passiveEnergyTickAmount;
+            passiveEnergyCooldown = 0.0f;    
+        }
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
