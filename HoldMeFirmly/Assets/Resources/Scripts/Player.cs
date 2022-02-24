@@ -30,7 +30,6 @@ public class Player : MonoBehaviour
     void Start()
     {
         currentEnergy = totalEnergy;
-
     }
 
     // Update is called once per frame
@@ -39,6 +38,9 @@ public class Player : MonoBehaviour
             MovePlayer();
         if (Input.GetButton("Tilt"))            // (mouse 0, mouse 2) or (q, e)
             TiltPlayer();
+        else {
+            ResetTiltPlayer();
+        }
         if (Input.GetButton("SpendEnergy")) {   // spacebar or w
             ActivelySpendEnergy();
         }
@@ -83,6 +85,11 @@ public class Player : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void ResetTiltPlayer() {
+        float eulerZ = gameObject.transform.localEulerAngles.z;
+        gameObject.transform.localEulerAngles = Vector3.zero;
     }
 
     private void ActivelySpendEnergy() {

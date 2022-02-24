@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Catchable : MonoBehaviour
 {
+    [SerializeField] private float xSpawn = 0.0f;
     [SerializeField] private float ySpawn = 0.0f;
-    [SerializeField] private float yDespawn = 0.0f;
     [SerializeField] private float energyRequired = 0.0f;
     [SerializeField] private float energyReturn = 0.0f;
     private float currentEnergy = 0.0f;
@@ -26,9 +26,23 @@ public class Catchable : MonoBehaviour
         gameObject.transform.position += new Vector3(deltaX, 0.0f, 0.0f);
     }
 
-    private void OnCollisionExit2D(Collision2D collision){
+    private void OnTriggerExit2D(Collider2D collision){
         if (collision.gameObject.GetComponent<Player>() != null) {
+            Debug.Log("Exit has been detected");
             Player.listOfCaughtShapes.Remove(this);
         }
+    }
+
+    private void Despawn(bool destroy = false) {
+        if (destroy) {
+            Object.Destroy(this);
+            return;
+        }
+        gameObject.SetActive(false);
+    }
+
+    private void Respawn() {
+        gameObject.transform.position = new Vector3(xSpawn, ySpawn, 0.0f);
+        currentEnergy = 0.0f;
     }
 }
