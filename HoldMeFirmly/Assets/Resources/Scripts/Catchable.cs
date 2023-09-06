@@ -29,7 +29,9 @@ public class Catchable : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision){
         if (collision.gameObject.GetComponent<Player>() != null) {
             Debug.Log("Exit has been detected");
-            Player.listOfCaughtShapes.Remove(this);
+            Despawn();
+            Respawn();
+            gameObject.SetActive(false);
         }
     }
 
@@ -38,11 +40,20 @@ public class Catchable : MonoBehaviour
             Object.Destroy(this);
             return;
         }
+        Player.listOfCaughtShapes.Remove(this);
         gameObject.SetActive(false);
     }
 
     private void Respawn() {
         gameObject.transform.position = new Vector3(xSpawn, ySpawn, 0.0f);
         currentEnergy = 0.0f;
+    }
+
+    public float ConsumeEnergy(float energy) {
+        currentEnergy += energy;
+        if (currentEnergy >= energyRequired) {
+            return energyReturn;
+        }
+        return 0.0f;
     }
 }
